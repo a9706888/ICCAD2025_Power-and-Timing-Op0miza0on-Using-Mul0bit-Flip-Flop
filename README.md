@@ -279,7 +279,7 @@ OPERATION <operation_count>
 - **Complete Coverage**: All instances with valid coordinates
 - **Net Connectivity**: Full NETS section with proper routing topology
 
-## 🔨 Build and Usage
+## 🔨 Build
 
 ### Prerequisites
 - **C++11 Compiler**: g++ with C++11 support
@@ -294,48 +294,12 @@ make
 g++ -std=c++17 -O3 -I. -o clean_parser  *.cpp -DNDEBUG
 ```
 
-### Usage
-```bash
-./clean_parser \
-    -weight <weight_file> \
-    -lib <liberty_file1> <liberty_file2> ... \
-    -lef <lef_file1> <lef_file2> ... \
-    -v <verilog_file> \
-    -def <def_file> \
-    -out <output_name>
-```
 
-### Example
-```bash
-./clean_parser \
-    -weight testcase3/weights.txt \
-    -lib testcase3/*.lib \
-    -lef testcase3/*.lef \
-    -v testcase3/design.v \
-    -def testcase3/placement.def \
-    -out cadb_1060_final
-```
 
 **Output Files Generated**:
 - `cadb_1060_final.list` - Pin mapping and operation log
 - `cadb_1060_final.def` - Final placement solution
 - `cadb_1060_final.v` - Optimized Verilog netlist
-
-## Contest Submission Format
-
-### Executable Naming
-```bash
-./cadb_1060_alpha    # Alpha submission
-./cadb_1060_beta     # Beta submission  
-./cadb_1060_final    # Final submission
-```
-(Replace `1060` with actual team registration number)
-
-### Submission Files
-1. **Source Code**: Complete C++ implementation
-2. **Makefile**: Automated build configuration  
-3. **Documentation**: Algorithm description and usage guide
-4. **Test Results**: Validation on provided test cases
 
 ## 🌟 Technical Highlights
 
