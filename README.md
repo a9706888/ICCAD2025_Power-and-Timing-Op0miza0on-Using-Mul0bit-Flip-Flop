@@ -1,36 +1,36 @@
-# ICCAD 2025 Multi-bit Flip-Flop Banking Competition Solution
+# 🏆 ICCAD 2025 Power and Timing Optimization Using Multibit Flip-Flop
 
-## Overview
+## 📖 Overview
 
 This project is a complete solution for the **ICCAD 2025 Multi-bit Flip-Flop Banking Competition**, implementing a sophisticated VLSI physical design optimization tool that performs intelligent flip-flop banking and placement for integrated circuits.
 
-### Competition Objectives
+### 🎯 Competition Objectives
 - **Area Optimization**: Reduce total flip-flop area through strategic banking operations
 - **Power Efficiency**: Minimize leakage and dynamic power consumption via shared control logic
 - **Performance Enhancement**: Improve timing through reduced parasitic capacitance
 - **Design Quality**: Maintain functional equivalence while achieving better placement density
 
-### Key Constraints
+### ⚙️ Key Constraints
 - **Functional Equivalence**: All transformations must preserve logic behavior
 - **Timing Preservation**: No setup/hold violations across clock domains
 - **Physical Legality**: Maintain placement legality and design rule compliance
 - **Contest Compliance**: Generate exact output format required by ICCAD 2025 specification
 
-## Competition Specification
+## 📂 Competition Specification
 
-### Input Files
+### 📥 Input Files
 - **Liberty Files (`.lib`)**: Cell library definitions with timing/power models
 - **LEF Files (`.lef`)**: Physical layout and pin geometry information
 - **Verilog Files (`.v`)**: Netlist connectivity and instance definitions
 - **DEF Files (`.def`)**: Placement coordinates and physical design
 - **Weight Files**: Objective function parameters (α, β, γ weights)
 
-### Output Files (Required by Contest)
+### 📥 Output Files (Required by Contest)
 1. **`.list` File**: Complete pin mapping and operation log
 2. **`.def` File**: Final placement solution (LEF/DEF format)  
 3. **`.v` File**: Functionally equivalent Verilog netlist
 
-### Objective Function
+### 📥 Objective Function
 ```
 Cost = α·TNS + Σ(β·Power(i) + γ·Area(i))
                ∀i∈FF
@@ -40,13 +40,13 @@ Where:
 - **Power(i)**: Power consumption of flip-flop i
 - **Area(i)**: Area cost of flip-flop i
 
-### Evaluation Criteria
+### 📥 Evaluation Criteria
 - **60 minute time limit** per test case
 - **Functional correctness** (UNMATCH = zero score)
 - **Design rule compliance** (overlaps/violations = zero score)
 - **Score optimization** with bounded runtime factor (±10%)
 
-## Algorithm Architecture
+## 🧩 Algorithm Architecture
 
 The solution implements a **comprehensive 8-stage optimization pipeline**:
 
@@ -61,9 +61,9 @@ Stage 7: Banking              → Three-stage strategic banking operations
 Stage 8: Legalization & Output → Physical legalization and file generation
 ```
 
-## Detailed Algorithm Flow
+## 🧩 Detailed Algorithm Flow
 
-### Stage 1: Parsing
+### 📌 Stage 1: Parsing
 **Purpose**: Load and interpret all input design files into internal data structures
 
 **Sub-steps**:
@@ -74,7 +74,7 @@ Stage 8: Legalization & Output → Physical legalization and file generation
 5. **Weight File Parsing**: Load objective function parameters (α, β, γ)
 6. **Instance Linking**: Connect instances to their corresponding cell templates
 
-### Stage 2: FF Grouping  
+### 📌 Stage 2: FF Grouping  
 **Purpose**: Analyze FF cell compatibility and build hierarchical grouping structure
 
 **Process**:
@@ -90,7 +90,7 @@ hierarchical_ff_groups[clock_edge][pin_interface][bit_width] = {list_of_compatib
 // Example: ["FALLING"]["D_Q_QN_CK_SI_SE"]["2bit"] = ["SNPSLOPT25_FSDN2_V2_1", ...]
 ```
 
-### Stage 3: Debanking
+### 📌 Stage 3: Debanking
 **Purpose**: Convert existing multi-bit FFs to single-bit for complete re-optimization
 
 **Process**:
@@ -105,7 +105,7 @@ hierarchical_ff_groups[clock_edge][pin_interface][bit_width] = {list_of_compatib
 - **Position Preservation**: All debanked FFs placed at original coordinates (temporary overlap)
 - **Reversibility**: Complete pin mapping enables perfect reconstruction during banking
 
-### Stage 4: Instance Grouping
+### 📌 Stage 4: Instance Grouping
 **Purpose**: Group FF instances by hierarchy, functionality, and banking compatibility
 
 **Grouping Strategy**:
@@ -121,7 +121,7 @@ hierarchical_ff_groups[clock_edge][pin_interface][bit_width] = {list_of_compatib
 group_key = clock_edge + "|" + pin_interface + "|" + scan_info + "|" + clock_net
 ```
 
-### Stage 5: Score FF
+### 📌 Stage 5: Score FF
 **Purpose**: Calculate optimal FF choices for each compatibility group using objective function
 
 **Scoring Process**:
@@ -139,7 +139,7 @@ group_key = clock_edge + "|" + pin_interface + "|" + scan_info + "|" + clock_net
 optimal_ff_for_groups["FALLING|D_Q_QN_CK_SI_SE|2bit"] = "SNPSSLOPT25_FSDN2_V2_1"
 ```
 
-### Stage 6: Substitution
+### 📌 Stage 6: Substitution
 **Purpose**: Optimize individual FF choices through progressive refinement
 
 #### Stage 1: Original Pin Pattern Substitution
@@ -167,7 +167,7 @@ Score = (β·Power + γ·Area)/bit_width + δ
 // Lower score = better FF choice
 ```
 
-### Stage 7: Banking
+### 📌 Stage 7: Banking
 **Purpose**: Intelligently combine single-bit FFs into optimal multi-bit variants
 
 The banking stage consists of **three sub-stages** executed sequentially:
@@ -241,7 +241,7 @@ After banking completion, execute **Post-Banking SBFF Substitution**:
 - **Condition**: Only substitute if `best_recorded_score < current_score`
 - **Operation Type**: POST_SUBSTITUTE (separate from main substitution)
 
-### Stage 8: Legalization & Output
+### 📌 Stage 8: Legalization & Output
 **Purpose**: Ensure physical compliance and generate contest-required outputs
 
 #### Legalization Process
@@ -279,76 +279,19 @@ OPERATION <operation_count>
 - **Complete Coverage**: All instances with valid coordinates
 - **Net Connectivity**: Full NETS section with proper routing topology
 
-## Implementation Details
-
-### Data Structures
-
-**Core Design Database**:
-```cpp
-struct DesignDatabase {
-    std::map<std::string, std::shared_ptr<Cell>> cell_library;
-    std::map<std::string, std::shared_ptr<Instance>> instances;
-    std::map<std::string, std::shared_ptr<Net>> nets;
-    std::vector<TransformationRecord> transformation_history;
-    CompletePipeline complete_pipeline;
-    // ... optimization data structures
-};
-```
-
-**Transformation Tracking**:
-```cpp
-struct TransformationRecord {
-    std::string original_instance_name;
-    std::string result_instance_name;
-    std::map<std::string, std::string> pin_mapping;
-    enum Operation { KEEP, DEBANK, BANK, SUBSTITUTE, POST_SUBSTITUTE };
-    std::string cluster_id;  // For tracking related transformations
-};
-```
-
-**Banking Types**:
-```cpp
-enum class BankingType {
-    FSDN,           // FALLING edge → FSDN2/FSDN4
-    RISING_LSRDPQ,  // RISING edge → LSRDPQ4
-    NONE            // Cannot be banked
-};
-```
-
-### Key Features
-
-**FF Compatibility System**:
-- **Hierarchical Grouping**: Clock Edge → Pin Interface → Bit Width
-- **28 Compatibility Groups**: Complete coverage of library variants
-- **Pin Classification**: Comprehensive FF pin type system (D, Q, CK, SI, SE, R, S, RD, SD, RS, SR)
-- **Banking Relationships**: Automatic detection from Liberty `single_bit_degenerate` and `banking_targets`
-
-**Score Optimization**:
-- **Multi-level Analysis**: Template-level + instance-level optimization
-- **Conditional Substitution**: Only improve when score demonstrably better
-- **Banking Eligibility**: Compare 1-bit vs multi-bit optimal scores before banking
-
-**Transformation Traceability**:
-- **Complete Pipeline**: Track all instances through each optimization stage
-- **Operation Ordering**: DEBANK → SUBSTITUTE → BANK → POST_SUBSTITUTE sequence
-- **Pin-level Mapping**: 1-to-1 mapping for every transformed pin connection
-- **Contest Compliance**: Direct generation of required operation log format
-
-## Build and Usage
+## 🔨 Build and Usage
 
 ### Prerequisites
-- **C++17 Compiler**: g++ with C++17 support
+- **C++11 Compiler**: g++ with C++11 support
 - **Standard Libraries**: No external dependencies beyond STL
 
 ### Build Instructions
 ```bash
-cd clean_parser
 make clean
 make
 
 # Alternative manual compilation:
-g++ -std=c++17 -O3 -I. -o clean_parser \
-    *.cpp -DNDEBUG
+g++ -std=c++17 -O3 -I. -o clean_parser  *.cpp -DNDEBUG
 ```
 
 ### Usage
@@ -394,7 +337,7 @@ g++ -std=c++17 -O3 -I. -o clean_parser \
 3. **Documentation**: Algorithm description and usage guide
 4. **Test Results**: Validation on provided test cases
 
-## Technical Highlights
+## 🌟 Technical Highlights
 
 ### Advanced Optimizations
 - **Multi-stage Substitution**: Progressive FF optimization through 3-stage refinement
@@ -414,34 +357,7 @@ g++ -std=c++17 -O3 -I. -o clean_parser \
 - **Scalability**: Tested on designs with 100K+ flip-flop instances
 - **Quality Results**: Achieves significant area/power improvements while maintaining timing closure
 
-## Project Structure
-```
-clean_parser/
-├── main.cpp                    # Main orchestration logic
-├── parsers.cpp/.hpp           # File parsing (Liberty, LEF, Verilog, DEF)
-├── data_structures.hpp        # Core data model definitions
-├── substitution.cpp/.hpp      # Three-stage FF substitution
-├── banking.cpp               # Three-stage banking implementation
-├── strategic_debanking.cpp   # Multi-bit FF decomposition
-├── transformation_tracking.cpp # Operation log generation
-├── def_output_generator.hpp   # DEF file output
-├── Legalization.cpp/.hpp      # Physical legalization
-├── timing_repr_hardcoded.hpp  # Timing representation database
-└── Makefile                   # Build configuration
-```
-
-## Known Issues and Limitations
-
-### Current Challenges
-- **LSRDPQ4 Power Analysis**: Some power analysis tools report negative power for LSRDPQ4 instances with UNCONNECTED Q pins
-- **Distance Thresholds**: Current implementation uses very large distance thresholds (may need tuning for specific test cases)
-
-### Contest-Specific Adaptations
-- **No Scan Chain Constraints**: 2025 contest explicitly states no scan chains, simplifying banking decisions
-- **Runtime vs Quality**: Balanced optimization for 60-minute time limit vs maximum quality
-- **Output Format Compliance**: Exact adherence to contest specification over generalized flexibility
-
-## Future Improvements
+## 🚧 Future Improvements
 
 ### Algorithmic Enhancements
 - **Machine Learning Integration**: Learn optimal banking patterns from training data
