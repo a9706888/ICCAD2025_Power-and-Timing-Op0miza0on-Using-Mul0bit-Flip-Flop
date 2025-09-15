@@ -279,7 +279,7 @@ OPERATION <operation_count>
 - **Complete Coverage**: All instances with valid coordinates
 - **Net Connectivity**: Full NETS section with proper routing topology
 
-## 🔨 Build
+## 🔨 Build and Usage
 
 ### Prerequisites
 - **C++11 Compiler**: g++ with C++11 support
@@ -294,7 +294,8 @@ make
 g++ -std=c++17 -O3 -I. -o clean_parser  *.cpp -DNDEBUG
 ```
 
-
+### Usage
+For usage instructions, please refer to [spec.pdf](spec.pdf).
 
 **Output Files Generated**:
 - `cadb_1060_final.list` - Pin mapping and operation log
