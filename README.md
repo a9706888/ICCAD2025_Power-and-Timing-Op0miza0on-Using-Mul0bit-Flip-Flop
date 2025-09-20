@@ -336,10 +336,4 @@ For usage instructions, please refer to [spec.pdf](spec.pdf).
 - **Incremental Updates**: Faster re-optimization for design changes
 - **GUI Integration**: Visual debugging and optimization guidance
 
----
 
-**ICCAD 2025 Multi-bit Flip-Flop Banking Competition**  
-Team Registration: 1060  
-Implementation: Complete C++17 Solution  
-Target: Area/Power Optimization with Timing Closure  
-Status: Production Ready ✅
